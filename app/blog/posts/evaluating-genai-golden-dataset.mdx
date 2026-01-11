@@ -1,0 +1,49 @@
+---
+title: 'Evaluating GenAI: Building Your "Golden Dataset"'
+publishedAt: '2025-11-21'
+summary: 'A surgical approach to evaluating GenAI systems using topic modeling and targeted generation.'
+---
+
+Evaluation is the single most critical component of a GenAI system. If you cannot measure it, you cannot improve it. Most teams fall into one of two traps:
+
+1. The manual slog: collecting logs and manually checking answers against a knowledge base.
+2. The shotgun approach: using tools like RAGAS to randomly generate a test set from your documents.
+
+This post proposes a surgical approach: a customizable workflow that uses topic modeling to build a "Golden Dataset" that actually tests your system's weak points.
+
+## The workflow: from random to surgical
+
+### Step 1: know your data (topic modeling)
+Gather your data and run a topic modeling tool like BERTopic.
+
+- Why: this gives you a map of your knowledge base.
+- The insight: the distribution helps you identify scarce topics a random sampler would miss.
+
+### Step 2: targeted generation
+Based on these topics, generate question-answer pairs to force coverage of weak areas.
+
+- RAGAS (shotgun): random spread of questions.
+- This method (scalpel): force-generate adversarial questions for scarce topics.
+
+Tip: you can control the LLM context window based on topic size to optimize performance.
+
+### Step 3: the "fool's gold" filter (quality control)
+Introduce a critic loop to filter hallucinated pairs:
+
+1. Generate a QA pair.
+2. Have a separate critic model answer using only the context.
+3. Compare answers with simple metrics or an LLM judge; discard if they do not match.
+
+## The multi-hop dilemma
+This method excels at single-hop QA, but multi-hop questions are harder.
+
+- The challenge: real users ask questions that bridge multiple documents.
+- The reality: knowledge graphs are best for complex reasoning.
+- The compromise: use topic intersection to find overlapping documents for multi-hop generation.
+
+## Why this approach wins
+
+1. Edge case coverage for scarce topics.
+2. Surgical control over what gets tested.
+3. Higher quality data with critic filtering.
+4. Flexibility without proprietary DSLs.
