@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Instagram, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Instagram, Linkedin, Mail, MapPin, Twitter } from "lucide-react";
 import { BlogPosts } from "app/components/posts";
 import SpriteScroller from "app/components/sprite-scroller";
 
@@ -135,6 +135,16 @@ export default async function Page() {
           <p className="text-neutral-600 dark:text-neutral-400">
             AI & Software Engineer
           </p>
+          <div className="flex flex-col gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
+            <span className="inline-flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Open to work
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400" aria-hidden="true" />
+              SF Bay Area
+            </span>
+          </div>
         </div>
         <p className="text-neutral-800 dark:text-neutral-200">
           AI engineer focused on production-ready GenAI systems, evaluation, and

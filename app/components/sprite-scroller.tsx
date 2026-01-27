@@ -47,6 +47,7 @@ const BG_TOLERANCE = 18;
 const TEXT_HEIGHT_MULTIPLIER = 1.9;
 const SINGLE_CLICK_TIMEOUT_MS = 250;
 const MODE_TIMEOUT_MS = 900;
+const DOUBLE_TAP_WINDOW_MS = 280;
 
 export default function SpriteScroller({
   configs = defaultConfigs,
@@ -85,6 +86,7 @@ export default function SpriteScroller({
   const clickTimeoutRef = useRef<number | null>(null);
   const modeTimeoutRef = useRef<number | null>(null);
   const activeModeRef = useRef<Mode>(mode);
+  const lastTapRef = useRef<number>(0);
 
   const ensureCanvasSize = (width: number, height: number) => {
     const canvas = canvasRef.current;
@@ -265,25 +267,36 @@ export default function SpriteScroller({
       }
     };
 
-    const handleClick = () => {
+    const scheduleSingleTap = () => {
       if (clickTimeoutRef.current) {
         window.clearTimeout(clickTimeoutRef.current);
       }
-
       clickTimeoutRef.current = window.setTimeout(() => {
         setActiveMode("jump");
       }, SINGLE_CLICK_TIMEOUT_MS);
     };
 
-    const handleDoubleClick = () => {
-      if (clickTimeoutRef.current) {
-        window.clearTimeout(clickTimeoutRef.current);
+    const handlePointerUp = (event: PointerEvent) => {
+      if (event.pointerType === "touch") {
+        event.preventDefault();
       }
-      setActiveMode("attack");
+      const now = performance.now();
+      const sinceLastTap = now - lastTapRef.current;
+      lastTapRef.current = now;
+
+      if (sinceLastTap > 0 && sinceLastTap < DOUBLE_TAP_WINDOW_MS) {
+        if (clickTimeoutRef.current) {
+          window.clearTimeout(clickTimeoutRef.current);
+        }
+        setActiveMode("attack");
+        lastTapRef.current = 0;
+        return;
+      }
+
+      scheduleSingleTap();
     };
 
-    canvas.addEventListener("click", handleClick);
-    canvas.addEventListener("dblclick", handleDoubleClick);
+    canvas.addEventListener("pointerup", handlePointerUp);
 
     const loop = (time: number) => {
       drawFrame(time);
@@ -293,8 +306,7 @@ export default function SpriteScroller({
     rafRef.current = window.requestAnimationFrame(loop);
 
     return () => {
-      canvas.removeEventListener("click", handleClick);
-      canvas.removeEventListener("dblclick", handleDoubleClick);
+      canvas.removeEventListener("pointerup", handlePointerUp);
       if (clickTimeoutRef.current) {
         window.clearTimeout(clickTimeoutRef.current);
       }

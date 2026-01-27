@@ -38,6 +38,7 @@ html {
   background-repeat: no-repeat;
   image-rendering: pixelated;
   display: block;
+  touch-action: manipulation;
 }
 
 .page-enter {
