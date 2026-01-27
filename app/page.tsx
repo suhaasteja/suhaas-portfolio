@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Github, Instagram, Linkedin, Mail, Twitter } from "lucide-react";
 import { BlogPosts } from "app/components/posts";
+import SpriteScroller from "app/components/sprite-scroller";
 
 const fallbackProjects = [
   {
@@ -127,8 +128,9 @@ export default async function Page() {
     <section className="space-y-16 stagger">
       <header className="stagger-item space-y-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tighter">
-            Suhaas Vijjagiri 🎸
+          <h1 className="text-3xl font-semibold tracking-tighter flex items-center gap-3">
+            <span>Suhaas Vijjagiri</span>
+            <SpriteScroller className="self-center" />
           </h1>
           <p className="text-neutral-600 dark:text-neutral-400">
             AI & Software Engineer

@@ -34,6 +34,12 @@ html {
   scroll-behavior: smooth;
 }
 
+.sprite-pixel {
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  display: block;
+}
+
 .page-enter {
   animation: page-fade-in 600ms ease-out both;
 }
