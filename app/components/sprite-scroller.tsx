@@ -159,7 +159,7 @@ export default function SpriteScroller({
     return quantizeScale(scale);
   };
 
-  const drawFrame = (time: number) => {
+  const drawFrame = (time?: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -176,10 +176,11 @@ export default function SpriteScroller({
     const scale = getDynamicScale(config, frameHeight, fontSize);
     const totalFrames =
       config.totalFrames ?? config.columns * config.rows;
+    const now = time ?? performance.now();
     if (!startTimeRef.current) {
-      startTimeRef.current = time;
+      startTimeRef.current = now;
     }
-    const elapsed = time - startTimeRef.current;
+    const elapsed = now - startTimeRef.current;
     const frameDuration = 1000 / Math.max(1, fps);
     const frame = Math.floor(elapsed / frameDuration) % totalFrames;
     if (frame === lastFrameRef.current) {
